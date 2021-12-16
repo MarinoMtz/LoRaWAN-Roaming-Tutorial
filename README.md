@@ -21,10 +21,16 @@ Figure 1 depicts the general flowshart of a join procedure of an End-Device when
 
 ## Software requirements 
 
+- Chirpstack Application Server
+- Chirpstack Network Server with DevEUI DNS resolution capabilities
+- DNS Client with client authentication
 
 ## Chirpstack Network Server
+
+In order to make it possible to have DevEUI-based roaming we have modified the source-code of the Chirpstack Network Server, it is available here [CLNS]. The AS and NS shoud be installed ins the same manner as the original chirpstack.
 
 ## DNS Client
 
 
 [LoRaWAN Backend Interfaces]: https://lora-alliance.org/resource_hub/ts002-110-lorawan-backend-interfaces/
+[CLNS]: https://github.com/MarinoMtz/chirpstack-network-server
