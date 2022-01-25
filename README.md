@@ -30,6 +30,7 @@ Figure 1 depicts the general flowshart of a join procedure of an End-Device when
 In order to make it possible to have DevEUI-based roaming we have modified the source-code of the Chirpstack Network Server, it is available here [CLNS]. 
 The AS and NS shoud be installed ins the same manner as the original chirpstack.
 In addition to the regular parameters in the config file (chirpstack-network-server.toml), we shold add the folloing parameters:
+An example of this configuration file is included in this repository.
 
 ```
 # Network-server settings.
@@ -89,15 +90,48 @@ roaming_deveui=true
  - [roaming]
     - ``` resolve_netid_domain_suffix``` : an authoritative DNS server at ``` ".netid.iot-roam.net." ```  (The DNS Client will direct it to the Broker)
     - ``` resolve_deveui_domain_suffix``` : an authoritative DNS server at ``` ".deveui.iot-roam.net."```  (The DNS Client will direct it to the Broker)
-    - [roaming.api]
-
+    - ``` roaming_deveui=true ``` 
+ - [roaming.api] : the roaming api server configuration
+    - ```ca_cert```, ```tls_cert```, ```tls_key``` : used to authenticate other LNS
+ - [[roaming.servers]] : configuration per roaming agreement (in this case the LNS acts as fNS)
+    - ```net_id="XXXXXX"``` : 3-byte identifier of the hNS 
+    - ``` async=true```, ```async_timeout="5s"```, ``` passive_roaming=true ``` : passive roaming agreement config
+    - ``` server="https://XXXXX.netid.iot-roam.net" ```, ```port="XXXX"```:  URL and port of the fNS
+    - ``` ca_cert, tls_cer, tls_key" ```: client-side TLS configuration (provided by the hNS)
+ 
+ ###  To run the LNS:
+ 
+ The source code can be either compiled by following this tutorial: [ChripstackSource], or you can used the prempiled binary provided in this repository:
+ 
+ ``` /home/../chirpstack-network-server -c/../chirpstack-network-server-deveui.toml ```
+ 
 
 ## DNS Client
 
-This architecture requires to have DNS resolutions using client/server certificates for mutual authentication. 
+This architecture requires to have DNS over HTTPS resolutions using client/server certificates for mutual authentication. 
 For this PoC, client-certificates to be used at the LNS side will be provided by the DNS Broker.
+The DoH client to be used is a modified version on dnsproxy, available at [dnsproxy].
 
-For the 
+To run the client, we shall have a ```yaml``` configuration file including the following parameters:
+```
+---
+upstream:
+  - '1.1.1.1:53'
+  - '[/iot-roam.net/]https://broker.iot-roam.net/dns-query'
+bootstrap:
+  - '8.8.8.8:53'
+cache-size: 64000
+ratelimit: 0
+ipv6-disabled: false
+udp-buf-size: 0
+max-go-routines: 0
+version: false
+```
+
+To run the DNS Client, we use: 
+
+``` sudo ./dnsproxy --config-path=config.yaml ```
 
 [LoRaWAN Backend Interfaces]: https://lora-alliance.org/resource_hub/ts002-110-lorawan-backend-interfaces/
 [CLNS]: https://github.com/MarinoMtz/chirpstack-network-server
+[dnsproxy]: https://github.com/MarinoMtz/dnsproxy/tree/clienauthyaml
