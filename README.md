@@ -4,7 +4,9 @@ This tutorial aims at giving a quckstart tutorial for setting up a roaming platf
 
 ## General architecture
 
-Contrary to the [LoRaWAN Backend Interfaces], our roaming approach makes it posible to have roaming without the need of provisioning JoinEUI/AppEUI identifiers on each End-Device. For that, we rely on Private DNS resolutions using DoH with mutual authentication. Therefore, we introduce a new network element, a DNS Broker that: 
+Contrary to the [LoRaWAN Backend Interfaces], our roaming approach makes it posible to have roaming without the need of provisioning JoinEUI/AppEUI identifiers on each End-Device. 
+For that, we rely on Private DNS resolutions using DoH with mutual authentication. 
+Therefore, we introduce a new network element, a DNS Broker that: 
 
 - will be set up per business federation.
 - is in chare of delivering client certificates.
@@ -29,7 +31,7 @@ Figure 1 depicts the general flowshart of a join procedure of an End-Device when
 
 In order to make it possible to have DevEUI-based roaming we have modified the source-code of the Chirpstack Network Server, it is available here [CLNS]. 
 The AS and NS shoud be installed ins the same manner as the original chirpstack.
-In addition to the regular parameters in the config file (chirpstack-network-server.toml), we shold add the folloing parameters:
+In addition to the regular parameters in the config file (```chirpstack-network-server.toml```), we shold add the folloing parameters:
 An example of this configuration file is included in this repository.
 
 ```
@@ -101,7 +103,8 @@ roaming_deveui=true
  
  ###  To run the LNS:
  
- The source code can be either compiled by following this tutorial: [ChripstackSource], or you can used the prempiled binary provided in this repository:
+ The source code can be either compiled by following this tutorial: [ChripstackSource], or you can used the pre-compiled binary provided in this repository.
+ Then, to run it:
  
  ``` /home/../chirpstack-network-server -c/../chirpstack-network-server-deveui.toml ```
  
@@ -112,7 +115,7 @@ This architecture requires to have DNS over HTTPS resolutions using client/serve
 For this PoC, client-certificates to be used at the LNS side will be provided by the DNS Broker.
 The DoH client to be used is a modified version on dnsproxy, available at [dnsproxy].
 
-To run the client, we shall have a ```yaml``` configuration file including the following parameters:
+To run the client, we shall have a ```.yaml``` configuration file including the following parameters:
 ```
 ---
 upstream:
@@ -126,8 +129,13 @@ ipv6-disabled: false
 udp-buf-size: 0
 max-go-routines: 0
 version: false
+tls-client-crt: '/path/file'
+tls-client-key: '/path/file'
 ```
 
+This configuration allow us to define two DNS Upstrams, the fisrt one: ```'1.1.1.1:53'``` will used by the host to make most of DNS Request, and the second will use ```https://broker.iot-roam.net/dns-query``` only for requests having ```.iot-roam.net``` as domain suffix.
+
+Then, we also pass through the configuration file, the information requered for DoH Upstream Authentication: ```tls-client-crt``` and ```tls-client-key```.
 To run the DNS Client, we use: 
 
 ``` sudo ./dnsproxy --config-path=config.yaml ```
@@ -135,3 +143,4 @@ To run the DNS Client, we use:
 [LoRaWAN Backend Interfaces]: https://lora-alliance.org/resource_hub/ts002-110-lorawan-backend-interfaces/
 [CLNS]: https://github.com/MarinoMtz/chirpstack-network-server
 [dnsproxy]: https://github.com/MarinoMtz/dnsproxy/tree/clienauthyaml
+[ChripstackSource]: https://www.chirpstack.io/application-server/community/source/
