@@ -5,7 +5,7 @@ This tutorial aims at giving a quckstart tutorial for setting up a roaming platf
 ## General architecture
 
 Contrary to the [LoRaWAN Backend Interfaces], our roaming approach makes it posible to have roaming without the need of provisioning JoinEUI/AppEUI identifiers on each End-Device. 
-For that, we rely on Private DNS resolutions using DoH with mutual authentication. 
+For that, we rely on Private DNS resolutions using DoH (DNS over HTTPS) with mutual authentication. 
 Therefore, we introduce a new network element, a DNS Broker that: 
 
 - will be set up per business federation.
@@ -13,13 +13,27 @@ Therefore, we introduce a new network element, a DNS Broker that:
 - will manage Private DNS Zones : 
   - CNAME:  ``` domain: [DevEUI:EUI-64].deveui.iot-roam.net ``` , ``` target: NetID.netid.iot-roam.net ``` 
   - A:      ``` domain: [NetID:EUI-64].netid.iot-roam.net ``` ,  ``` IP: 	X.X.X.X ``` 
-- will authenticate LNS and will meke private DNS resolutions
+- will authenticate LNS and will meke private DNS resolutions.
+
+A tutorial on how to set up an open-source DNS Broker can be accessed here: [Private DNS Broker]
 
 Figure 1 depicts the general flowshart of a join procedure of an End-Device when roaming:
 
 <p align="center">
   <img width="800" height="350" src="https://github.com/MarinoMtz/LoRaWAN-Roaming-Tutorial/blob/main/images/echange.svg">
 </p>
+
+The join procedure works as follows:
+
+1. The ED sends a **Join-request** message. Then, RG forwards the JR to its NS (the fNS) [steps 1-2].
+2. The fNS determines whether there is a roaming agreement with the Network to which the ED belongs by doing a DNS query carrying the DevEUI to get the hNS/sNS NetID and IP Address. For this it need a client-certificate delivered by the Broker
+3. The fNS, sends a **PRStartReq** message carrying the message.
+4. Then, hNS/sNS forwards the **JoinReq** message to its JS [steps 7-8].
+5. The JS replies with a **JoinAns** message carrying the \texttt{Join-accept} [step 9]. 
+6. The fNS sends a **PRStartAns** message to the hNS/sNS carrying the \texttt{Join-accept} [step 10]. 
+7. The fNS finally sends a **Join-accept** to the ED [steps 11-12].
+
+Note that, contrary to Backend interfaces, no DNS resolution is made with the JoinEUI
 
 ## Software requirements 
 
@@ -86,16 +100,16 @@ roaming_deveui=true
 
 ###  Fields to be configured: 
 
- - [network_server] 
+ - [network_server]: 
    - ``` net_id```: this corresponds to the 3-byte identifier delivered by the LoRa Alliance
 
- - [roaming]
+ - [roaming]:
     - ``` resolve_netid_domain_suffix``` : an authoritative DNS server at ``` ".netid.iot-roam.net." ```  (The DNS Client will direct it to the Broker)
     - ``` resolve_deveui_domain_suffix``` : an authoritative DNS server at ``` ".deveui.iot-roam.net."```  (The DNS Client will direct it to the Broker)
     - ``` roaming_deveui=true ``` 
  - [roaming.api] : the roaming api server configuration
     - ```ca_cert```, ```tls_cert```, ```tls_key``` : used to authenticate other LNS
- - [[roaming.servers]] : configuration per roaming agreement (in this case the LNS acts as fNS)
+ - [[roaming.servers]]: configuration per roaming agreement (in this case the LNS acts as fNS)
     - ```net_id="XXXXXX"``` : 3-byte identifier of the hNS 
     - ``` async=true```, ```async_timeout="5s"```, ``` passive_roaming=true ``` : passive roaming agreement config
     - ``` server="https://XXXXX.netid.iot-roam.net" ```, ```port="XXXX"```:  URL and port of the fNS
@@ -144,3 +158,4 @@ To run the DNS Client, we use:
 [CLNS]: https://github.com/MarinoMtz/chirpstack-network-server
 [dnsproxy]: https://github.com/MarinoMtz/dnsproxy/tree/clienauthyaml
 [ChripstackSource]: https://www.chirpstack.io/application-server/community/source/
+[Private DNS Broker]: https://github.com/MarinoMtz/dnsresolver
