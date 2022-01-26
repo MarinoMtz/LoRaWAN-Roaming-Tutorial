@@ -149,7 +149,7 @@ tls-client-crt: '/path/file'
 tls-client-key: '/path/file'
 ```
 
-This configuration allow us to define two DNS Upstrams, the fisrt one: ```'1.1.1.1:53'``` will used by the host to make most of DNS Request, and the second will use ```https://broker.iot-roam.net/dns-query``` only for requests having ```.iot-roam.net``` as domain suffix.
+This configuration allow us to define two DNS Upstreams, the fisrt one: ```'1.1.1.1:53'``` will be used by the host to make most of DNS Request, and the second will use ```https://broker.iot-roam.net/dns-query``` only for requests having ```.iot-roam.net``` as domain suffix.
 
 Then, we also pass through the configuration file, the information requered for DoH Upstream Authentication: ```tls-client-crt``` and ```tls-client-key```.
 To run the DNS Client, we use: 
