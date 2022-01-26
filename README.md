@@ -25,15 +25,17 @@ Figure 1 depicts the general flowshart of a join procedure of an End-Device when
 
 The join procedure works as follows:
 
-1. The ED sends a **Join-request** message. Then, RG forwards the JR to its NS (the fNS) [steps 1-2].
-2. The fNS determines whether there is a roaming agreement with the Network to which the ED belongs by doing a DNS query carrying the DevEUI to get the hNS/sNS NetID and IP Address. For this it need a client-certificate delivered by the Broker
-3. The fNS, sends a **PRStartReq** message carrying the message.
-4. Then, hNS/sNS forwards the **JoinReq** message to its JS [steps 7-8].
-5. The JS replies with a **JoinAns** message carrying the \texttt{Join-accept} [step 9]. 
-6. The fNS sends a **PRStartAns** message to the hNS/sNS carrying the \texttt{Join-accept} [step 10]. 
-7. The fNS finally sends a **Join-accept** to the ED [steps 11-12].
+- The ED sends a **Join-request** message. Then, RG forwards the JR to its NS (the fNS) [steps 1-2].
+- The fNS determines whether there is a roaming agreement with the Network to which the ED belongs by doing a DNS query carrying the DevEUI to get the hNS/sNS NetID and IP Address. 
+  - If not known alerady, the fNS makes a DNS Lookup to get the IP of the Broker [steps 3-4]
+  - The fNS makes a DoH Lookup to get the hNS IP. For this it needs a client-certificate delivered by the Broker [steps 5-6]
+- The fNS, sends a **PRStartReq** message carrying the **Join-request** message [step 7].
+- Then, hNS/sNS forwards the **JoinReq** message to its JS [steps 8].
+- The JS replies with a **JoinAns** message carrying the **Join-accept** [step 9]. 
+- The sNS/hNS sends a **PRStartAns** message to the fNS carrying the **Join-accept** [step 10]. 
+- The fNS finally sends a **Join-accept** to the ED [steps 11-12].
 
-Note that, contrary to Backend interfaces, no DNS resolution is made with the JoinEUI
+Note that, contrary to Backend interfaces, no DNS resolution is made with the JoinEUI.
 
 ## Software requirements 
 
@@ -117,7 +119,7 @@ roaming_deveui=true
  
  ###  To run the LNS:
  
- The source code can be either compiled by following this tutorial: [ChripstackSource], or you can used the pre-compiled binary provided in this repository.
+ The source code can be either compiled by following this tutorial: [ChripstackSource], or you can use the pre-compiled binary provided in this repository.
  Then, to run it:
  
  ``` /home/../chirpstack-network-server -c/../chirpstack-network-server-deveui.toml ```
