@@ -1,6 +1,6 @@
 # LoRaWAN-Roaming-Tutorial
 
-This tutorial aims at giving a quckstart tutorial for setting up a roaming platform for LoRaWAN End-Devices.
+This tutorial aims at giving a quickstart tutorial for setting up a roaming platform for LoRaWAN End-Devices.
 
 ## General architecture
 
@@ -47,8 +47,7 @@ Note that, contrary to Backend interfaces, no DNS resolution is made with the Jo
 
 In order to make it possible to have DevEUI-based roaming we have modified the source-code of the Chirpstack Network Server, it is available here [CLNS]. 
 The AS and NS shoud be installed ins the same manner as the original chirpstack.
-In addition to the regular parameters in the config file (```chirpstack-network-server.toml```), we shold add the folloing parameters:
-An example of this configuration file is included in this repository.
+In addition to the regular parameters in the config file (```chirpstack-network-server.toml```), we should add the folloing parameters:
 
 ```
 # Network-server settings.
@@ -99,6 +98,7 @@ roaming_deveui=true
   tls_key="/../../client-key.pem"
 
 ```
+An example of this configuration file is included in this repository.
 
 ###  Fields to be configured: 
 
