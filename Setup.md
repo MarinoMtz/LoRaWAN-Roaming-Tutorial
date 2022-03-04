@@ -27,14 +27,15 @@ Delegate a DNS zone for your devices
 
 For bind9, the configuration file looks like that:
 
-
-  >cat named.conf.local
-  zone "mydevices.plido.net" {
+```
+   >cat named.conf.local
+   zone "mydevices.plido.net" {
  	type master;
  	file "mydevices.db";
 	allow-transfer {51.91.121.182;};
 	notify no;
-  };
+   };
+```
 
 Where my devices.plido.net is the zone. Information regarding the devices will be store in the my devices.db on /var/cache/bind.
 
