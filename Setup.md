@@ -40,3 +40,13 @@ For bind9, the configuration file looks like that:
 Where my devices.plido.net is the zone. Information regarding the devices will be store in the my devices.db on /var/cache/bind.
 
 Note that Allow-transfert winch contains the IP address provided by the broker to synchronize the zone with the broker.
+
+Step 3
+------
+
+Setup private DNS with correct certificates
+
+Network Operator
+================
+
+
