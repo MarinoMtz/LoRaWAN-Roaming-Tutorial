@@ -1,4 +1,5 @@
-from multiprocessing import connection
+from multiprocessing import 
+import ctypes
 import psycopg2
 
 connection = psycopg2.connect(host="localhost", 
@@ -12,8 +13,12 @@ selectdeveui= "select dev_eui from device"
 cursor.execute(selectdeveui)
 deveui = cursor.fetchall()
 
+print(str(value[0])[12:25])
+
 for value in deveui:
     print(type(value), value[0])
+    address = id(value[0])
+    print(ctypes.cast(address, ctypes.py_object).value)
 
 if connection:
     cursor.close()
