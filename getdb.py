@@ -12,8 +12,6 @@ selectdeveui= "select dev_eui from device"
 cursor.execute(selectdeveui)
 deveui = cursor.fetchall()
 
-print(str(value[0])[12:25])
-
 for value in deveui:
     print(type(value), value[0])
     address = id(value[0])
