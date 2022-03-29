@@ -9,7 +9,7 @@ connection = psycopg2.connect(host="localhost",
 cursor=connection.cursor()
 
 selectdeveui= "select dev_eui from device"
-cursor.execute("selectdeveui")
+cursor.execute(selectdeveui)
 mobile_records = cursor.fetchall()
 
 for value in cursor:
