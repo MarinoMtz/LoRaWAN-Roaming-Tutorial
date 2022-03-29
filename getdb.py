@@ -10,9 +10,9 @@ cursor=connection.cursor()
 
 selectdeveui= "select dev_eui from device"
 cursor.execute(selectdeveui)
-mobile_records = cursor.fetchall()
+deveui = cursor.fetchall()
 
-for value in cursor:
+for value in deveui:
     print(value)
 
 if connection:
