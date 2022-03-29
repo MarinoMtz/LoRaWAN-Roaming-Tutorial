@@ -1,12 +1,20 @@
+from multiprocessing import connection
 import psycopg2
 
-conexion1 = psycopg2.connect(host="localhost", database="chirpstack_ns", user="chirpstack_ns", password="dbpassword")
+connection = psycopg2.connect(host="localhost", 
+                            database="chirpstack_ns", 
+                            user="chirpstack_ns", 
+                            password="dbpassword")
 
-cursor1=conexion1.cursor()
+cursor=connection.cursor()
 
-cursor1.execute("select dev_eui from device")
+selectdeveui= "select dev_eui from device"
+cursor.execute("selectdeveui")
+mobile_records = cursor.fetchall()
 
-for value in cursor1:
+for value in cursor:
     print(value)
 
-conexion1.close() 
+if connection:
+    cursor.close()
+    connection.close()
