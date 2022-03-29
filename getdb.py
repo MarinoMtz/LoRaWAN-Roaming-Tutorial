@@ -1,4 +1,3 @@
-from multiprocessing import 
 import ctypes
 import psycopg2
 
