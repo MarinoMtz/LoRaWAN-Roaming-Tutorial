@@ -1,6 +1,6 @@
 import psycopg2
 
-conexion1 = psycopg2.connect(database="chirpstack_ns", user="chirpstack_ns", password="dbpassword")
+conexion1 = psycopg2.connect(host="localhost", database="chirpstack_ns", user="chirpstack_ns", password="dbpassword")
 
 cursor1=conexion1.cursor()
 
