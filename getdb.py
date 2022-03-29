@@ -13,7 +13,7 @@ cursor.execute(selectdeveui)
 deveui = cursor.fetchall()
 
 for value in deveui:
-    print(value)
+    print(type(value))
 
 if connection:
     cursor.close()
