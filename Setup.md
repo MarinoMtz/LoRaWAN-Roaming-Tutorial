@@ -41,6 +41,9 @@ Where my devices.plido.net is the zone. Information regarding the devices will b
 
 Note that Allow-transfert winch contains the IP address provided by the broker to synchronize the zone with the broker.
 
+To create the file mydevices.db, a python script ``` getdb.py``` is provided. Before launching it you need to modify the
+following values in line 4: ```host```, ```database```, ```user```, ```password```.
+
 Step 3
 ------
 
