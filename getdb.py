@@ -1,5 +1,5 @@
 import psycopg2
-import socket
+from requests import get
 
 connection = psycopg2.connect(host="localhost",
                             database="chirpstack_ns", 
@@ -12,8 +12,7 @@ selectdeveui= "select dev_eui from device"
 cursor.execute(selectdeveui)
 deveui = cursor.fetchall()
 
-hostname = socket.gethostname()
-ip_address = socket.gethostbyname(hostname)
+ip_address = get('https://api.ipify.org').text
 
 f = open('devices.db', 'w')
 
