@@ -8,14 +8,14 @@ connection = psycopg2.connect(host="localhost",
 
 cursor=connection.cursor()
 
-selectdeveui= "select dev_eui from device"
+selectdeveui= "select * from device"
 cursor.execute(selectdeveui)
 deveui = cursor.fetchall()
 
-for value in deveui:
-    print(type(value), value[0])
-    address = id(value[0])
-    print(ctypes.cast(address, ctypes.py_object).value)
+for row in deveui:
+    print("dev_eui = ", row[0], )
+    print("created_at = ", row[1])
+    print("updated_at  = ", row[2], "\n")
 
 if connection:
     cursor.close()
