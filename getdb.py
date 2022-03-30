@@ -19,7 +19,7 @@ f = open('devices.db', 'w')
 
 for value in deveui:
     print("dev_eui = ", bytes(value[0]).hex())
-    f.write (str(bytes(value[0]).hex()) + ' ' + '60' + 'IN' + 'A' + ip_address)
+    f.write (str(bytes(value[0]).hex()) + ' ' + '60' + ' ' + 'IN' + ' ' + 'A' + ' ' + ip_address + '\n')
 if connection:
     cursor.close()
     connection.close()
